@@ -2,6 +2,7 @@
 An open source and seriously hideous prompt-engineered python app that attempts to improve on the behaviours of "OGxHD", an Xbox executable patching program
 
 Instructions
+
 Click open file to import an .xbe file, select the types of hex data to search for and hit check.
 You also have the ability to add additional hex data to search for. This will be extremely useful and likely will be more fleshed out in the future.
 
