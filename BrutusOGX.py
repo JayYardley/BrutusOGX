@@ -1,7 +1,8 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox, simpledialog
+from tkinter import ttk, filedialog, messagebox, simpledialog
 import os
 import time
+import json
 
 # Define the replacements
 REPLACEMENTS = {
@@ -13,6 +14,34 @@ REPLACEMENTS = {
 }
 
 file_path = None
+
+def load_custom_replacements():
+    custom_dir = "CustomValues"
+    if not os.path.exists(custom_dir):
+        os.makedirs(custom_dir)
+    for filename in os.listdir(custom_dir):
+        if filename.endswith(".json"):
+            filepath = os.path.join(custom_dir, filename)
+            with open(filepath, 'r') as file:
+                custom_data = json.load(file)
+                key = custom_data["name"]
+                search_bytes = bytes.fromhex(custom_data["search"])
+                replace_bytes = bytes.fromhex(custom_data["replace"])
+                REPLACEMENTS[key] = {"search": search_bytes, "replace": replace_bytes}
+                add_checkbox(key)
+
+def save_custom_replacement(name, search, replace):
+    custom_dir = "CustomValues"
+    if not os.path.exists(custom_dir):
+        os.makedirs(custom_dir)
+    data = {
+        "name": name,
+        "search": search,
+        "replace": replace
+    }
+    filepath = os.path.join(custom_dir, f"{name}.json")
+    with open(filepath, 'w') as file:
+        json.dump(data, file)
 
 def check_file():
     global file_path
@@ -57,19 +86,14 @@ def display_matches(matches):
     matches_window = tk.Toplevel(root)
     matches_window.title("Matched Data")
 
-    # Create a frame to contain the text widget and scrollbar
-    frame = tk.Frame(matches_window)
+    frame = ttk.Frame(matches_window)
     frame.pack(padx=10, pady=10, fill='both', expand=True)
 
-    # Create a scrollbar
-    scrollbar = tk.Scrollbar(frame)
+    scrollbar = ttk.Scrollbar(frame)
     scrollbar.pack(side="right", fill="y")
 
-    # Create a text widget to display the matches
-    text_widget = tk.Text(frame, yscrollcommand=scrollbar.set)
+    text_widget = tk.Text(frame, yscrollcommand=scrollbar.set, wrap='word')
     text_widget.pack(side="left", fill="both", expand=True)
-
-    # Configure the scrollbar to scroll the text widget
     scrollbar.config(command=text_widget.yview)
 
     checkboxes = []
@@ -78,40 +102,32 @@ def display_matches(matches):
         option, start, end, data = match
         match_text = f"{index}. {option}: Offset {start} to {end}, Data: {data.hex().upper()}"
 
-        # Create a frame to contain the checkbox and match text
-        checkbox_frame = tk.Frame(text_widget)
+        checkbox_frame = ttk.Frame(text_widget)
         checkbox_frame.pack(side="top", anchor="w")
 
-        # Create a checkbox
         var = tk.BooleanVar()
-        checkbox = tk.Checkbutton(checkbox_frame, variable=var, cursor="hand2")
+        checkbox = ttk.Checkbutton(checkbox_frame, variable=var)
         checkbox.pack(side="left")
 
-        # Insert the match text
         text_widget.window_create("end", window=checkbox_frame)
         text_widget.insert("end", match_text + "\n")
 
         checkboxes.append((var, match))
 
-    # Create a frame for the buttons
-    button_frame = tk.Frame(matches_window)
+    button_frame = ttk.Frame(matches_window)
     button_frame.pack(pady=10)
 
-    # Create a "Select All" button
-    select_all_button = tk.Button(button_frame, text="Select All", command=lambda: select_all_checkboxes(checkboxes))
+    select_all_button = ttk.Button(button_frame, text="Select All", command=lambda: select_all_checkboxes(checkboxes))
     select_all_button.pack(side="left", padx=5)
 
-    # Create a "Patch" button
-    patch_button = tk.Button(button_frame, text="Patch", command=lambda: patch_selected(matches, checkboxes))
+    patch_button = ttk.Button(button_frame, text="Patch", command=lambda: patch_selected(matches, checkboxes))
     patch_button.pack(side="left", padx=5)
 
-    # Create a "Brute Mode" button
-    brute_mode_button = tk.Button(button_frame, text="Brute Mode", command=lambda: generate_brute_mode(matches, checkboxes))
+    brute_mode_button = ttk.Button(button_frame, text="Brute Mode", command=lambda: generate_brute_mode(matches, checkboxes))
     brute_mode_button.pack(side="left", padx=5)
 
 def save_results(matches):
     try:
-        # Create a directory for results if it doesn't exist
         results_dir = "Results"
         if not os.path.exists(results_dir):
             os.makedirs(results_dir)
@@ -196,10 +212,11 @@ def add_custom_replacement():
             replace_bytes = bytes.fromhex(replace)
             REPLACEMENTS[key] = {"search": search_bytes, "replace": replace_bytes}
             add_checkbox(key)
+            save_custom_replacement(key, search, replace)
 
 def add_checkbox(key):
     var = tk.BooleanVar()
-    checkbox = tk.Checkbutton(frame, text=key, variable=var)
+    checkbox = ttk.Checkbutton(frame, text=key, variable=var)
     checkbox.pack(anchor='w')
     checkbox_vars.append(var)
 
@@ -207,33 +224,31 @@ def select_all_checkboxes(checkboxes):
     for var, _ in checkboxes:
         var.set(True)
 
-# Create the main window
 root = tk.Tk()
 root.title("BrutusOGX")
 
-# Create a frame for checkboxes
-frame = tk.Frame(root)
+style = ttk.Style()
+style.theme_use('clam')
+
+frame = ttk.Frame(root)
 frame.pack(padx=10, pady=10)
 
-# Create checkboxes
 checkbox_vars = []
 for option in REPLACEMENTS.keys():
     add_checkbox(option)
 
-# Create buttons
-button_frame = tk.Frame(root)
+button_frame = ttk.Frame(root)
 button_frame.pack(pady=10)
 
-open_button = tk.Button(button_frame, text="Open File", command=open_file)
+open_button = ttk.Button(button_frame, text="Open File", command=open_file)
 open_button.pack(side="left", padx=5)
 
-check_button = tk.Button(button_frame, text="Check", command=check_file)
+check_button = ttk.Button(button_frame, text="Check", command=check_file)
 check_button.pack(side="left", padx=5)
 
-custom_button = tk.Button(button_frame, text="Add Custom Replacement", command=add_custom_replacement)
+custom_button = ttk.Button(button_frame, text="Add Custom Replacement", command=add_custom_replacement)
 custom_button.pack(side="left", padx=5)
 
-# Run the application
-root.mainloop()
+load_custom_replacements()
 
-       
+root.mainloop()
