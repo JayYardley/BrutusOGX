@@ -9,6 +9,11 @@
 + Results are saved to text in *'/Results folder'*
 + **Brute mode** - Generating individual patches via individual results en masse
 
+### Installation
+**Download the Latest Release to right side of screen**
+or 
+**Build your own version using the BrutusOGX.py**
+
 ### Instructions
 1. Click **Open File** to import an .xbe file
 2. Select the types of hex data to search for (add your own if necessary)
