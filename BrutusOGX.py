@@ -3,7 +3,15 @@ from tkinter import ttk, filedialog, messagebox, simpledialog
 import os
 import time
 import json
-from config import REPLACEMENTS  # Importing REPLACEMENTS from config.py
+
+# REPLACEMENTS - Defines the default Hex code for BrutusOGX to look for by default
+REPLACEMENTS = {
+    "Auto 720p": {"search": bytes.fromhex('8002E001'), "replace": bytes.fromhex('0005D002')},
+    "Window View": {
+        "search": [bytes.fromhex('010707'), bytes.fromhex('010808'), bytes.fromhex('010F11')],
+        "replace": bytes.fromhex('020A0B')
+    }
+}
 
 #Set file path to null for initialization
 file_path = None
@@ -191,7 +199,9 @@ def select_all_checkboxes(checkboxes):
         var.set(True)
 
 root = tk.Tk()
-root.title("BrutusOGX")
+root.title("BrutusOGX 0.2")
+##custom icon
+##root.wm_iconbitmap(r'C:\Users\username\Desktop\BrutusOGX\image.ico')
 
 style = ttk.Style()
 style.theme_use('clam')
