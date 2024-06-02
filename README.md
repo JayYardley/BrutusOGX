@@ -1,7 +1,7 @@
 # BrutusOGX | Original XBox .XBE patcher
 ## <sup>An app that attempts to improve on the behaviours of "OGxHD", an Xbox executable patching program.</sup>
 
-![BrutusOGX](https://github.com/JayYardley/BrutusOGX/blob/main/image.jpg?raw=true)
+![BrutusOGX](https://github.com/JayYardley/BrutusOGX/blob/main/Image.jpg)
 
 ### Features
 + Importing of **.xbe** files (Actually supports any file type)
