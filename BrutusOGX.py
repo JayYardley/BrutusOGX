@@ -118,7 +118,7 @@ def save_results(matches):
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
-#Apply single patch - Multiple selection only works via brute mode
+#Apply single patch
 def patch_selected(matches, checkboxes):
     global file_path
     try:
