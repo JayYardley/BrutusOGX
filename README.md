@@ -10,9 +10,9 @@
 + **Brute mode** - Generating individual patches via individual results en masse
 
 ### Installation
-**Download the Latest Release to right side of screen**
+[**Download the Latest Release**]([url](https://github.com/JayYardley/BrutusOGX/releases/download/v0.2/BrutusOGX.v0.2.zip))
 or 
-**Build your own version using the BrutusOGX.py**
+[**Build your own version using the BrutusOGX.py**]([url](https://github.com/JayYardley/BrutusOGX/blob/main/BrutusOGX.py))
 
 ### Instructions
 1. Click **Open File** to import an .xbe file
